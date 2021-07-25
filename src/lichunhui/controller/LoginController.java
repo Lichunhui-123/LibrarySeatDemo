@@ -27,7 +27,7 @@ import lichunhui.service.UserService;
 /**
  * 登录
  */
-//登陆控制类
+//登陆Controller
 @Controller
 @SuppressWarnings("unchecked")//抑制没有进行类型检查操作的警告
 public class LoginController {
