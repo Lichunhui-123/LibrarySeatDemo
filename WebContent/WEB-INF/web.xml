@@ -51,7 +51,7 @@
 	
     <error-page> 
         <exception-type>java.lang.NullPointerException</exception-type> 
-        <location>/login.jsp</location> 
+        <location>/login.jsp</location>
     </error-page>
     
     
