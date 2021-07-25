@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.StudentDao">
+	
+	<!-- 左连接查询学生信息 -->
+	<!-- LEFT JOIN 关键字会从左道表 a 那里返回所有的专行 ，而右表只列出ON后条件与左表满足的部分-->
+	<select id="findStudent" parameterType="student" resultType="student">
+		select 
+			a.id as id,
+			a.name as name,
+			a.no as no,
+			a.sex as sex,
+			a.birth as birth,
+			a.phone as phone,
+			a.mail as mail,
+			a.photo as photo,
+			a.clazzid as clazzid,
+			b.name as clazzname
+		from student a left join clazz b <!-- 左连接 -->
+		on a.clazzid = b.id         <!-- 两表关联的条件 -->
+		 where 1 =1 
+		<!-- 使用if 条件查询学生信息 -->
+		<if test="clazzid != null and '' != clazzid">  
+            <![CDATA[  
+             and  clazzid = #{clazzid}   
+            ]]>  
+        </if>
+        <if test="name != null and '' != name">  
+            <![CDATA[  
+              AND a.name like '%' #{name} '%'  
+            ]]>  
+        </if>
+        <if test="no!=null and ''!=no">  
+            <![CDATA[  
+              AND a.no like '%' #{no} '%'  
+            ]]>  
+        </if>
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+
+    <!-- 查询学生总数 -->
+	<select id="countStudent" parameterType="student" resultType="int">
+		select 
+			count(*)
+		from student a left join clazz b on a.clazzid = b.id where 1 =1 
+		<if test="clazzid != null and '' != clazzid">  
+            <![CDATA[  
+             and  clazzid = #{clazzid}   
+            ]]>  
+        </if>
+        <if test="name != null and '' != name">  
+            <![CDATA[  
+              AND a.name like '%' #{name} '%'  
+            ]]>  
+        </if>
+        <if test="no!=null and ''!=no">  
+            <![CDATA[  
+              AND a.no like '%' #{no} '%'  
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 添加学生信息 -->
+	<insert id="addStudent" parameterType="student" >
+		insert student(no,name,sex,clazzid,birth,phone,mail,photo) 
+		values (#{no},#{name},#{sex},#{clazzid},#{birth},#{phone},#{mail},#{photo})
+	</insert>
+	
+	<!-- 修改学生信息 -->
+	<!-- 使用if+trim实现更新操作 -->
+	<!-- suffixOverrides：对trim包含内容尾部的覆盖(忽略) -->
+	<update id="updateStudent" parameterType="student">
+    	update student set
+    	<trim suffixOverrides=",">
+			<if test="name!=null">name=#{name},</if>
+			<if test="no!=null">no=#{no},</if>
+			<if test="sex!=null">sex=#{sex},</if>
+			<if test="clazzid!=null">clazzid=#{clazzid},</if>
+			<if test="birth!=null">birth=#{birth},</if>
+			<if test="phone!=null">phone=#{phone},</if>
+			<if test="mail!=null">mail=#{mail},</if>
+			<if test="phone!=null">phone=#{phone},</if>
+		</trim>
+		<where>id=#{id}</where>
+    </update>
+	
+	<!-- 删除学生信息 -->
+	<delete id="deleteStudent" parameterType="Integer">
+		delete from student <where>id=#{id}</where>
+	</delete>
+	
+    <!-- 根据学号左连接查询学生信息 -->
+	<select id="findOneStudentByno" resultType="student">
+		select 
+			a.id as id,
+			a.name as name,
+			a.no as no,
+			a.sex as sex,
+			a.birth as birth,
+			a.phone as phone,
+			a.mail as mail,
+			a.photo as photo,
+			a.clazzid as clazzid,
+			b.name as clazzname
+		from student a left join clazz b <!-- 左连接 -->
+		on a.clazzid = b.id              <!-- 连接两个表的条件 -->
+		 where a.no = #{no} 
+	
+	</select>
+	
+	<!-- 查询班级下存不存在学生 -->
+	<select id="existStudentWithClazzId" parameterType="Integer" resultType="student">
+		select 
+			a.id as id,
+			a.name as name,
+			a.no as no,
+			a.sex as sex,
+			a.birth as birth,
+			a.phone as phone,
+			a.mail as mail,
+			a.photo as photo,
+			a.clazzid as clazzid,
+			b.name as clazzname
+		from student a left join clazz b <!-- 左连接 -->
+		on a.clazzid = b.id         <!-- 两表关联的条件 -->
+		 where b.id = #{clazzid} limit 0,1
+	</select>
+</mapper>

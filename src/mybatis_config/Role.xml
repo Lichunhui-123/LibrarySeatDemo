@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="role">
+	
+	<!-- 选择查询角色信息 -->
+	<!-- CDATA:处理的是小于/小于等于符号（”<“/”<=“）与XML的尖括号”<“之间的冲突 -->
+	<select id="findRole" parameterType="role" resultType="role">
+		select roleId,roleName,menuIds,operationIds,roleDescription from role where 1 = 1
+		<!-- 模糊查询 -->
+		<if test="roleName != null and '' != roleName">  
+            <![CDATA[  
+              AND roleName like '%' #{roleName} '%'  
+            ]]>  
+        </if>
+        <!-- 分页 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+
+    <!-- 查询角色信息的总数 -->
+	<select id="countRole" parameterType="role" resultType="int">
+		select count(*) from role  where 1 = 1
+		<!-- 根据角色名进行模糊查询 -->
+		<if test="roleName != null and '' != roleName">  
+            <![CDATA[  
+              AND roleName like '%' #{roleName} '%'  
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 根据角色ID查询单个角色信息 -->
+	<select id="findOneRole" parameterType="Integer" resultType="role">
+		select roleId,roleName,menuIds,operationIds,roleDescription from role
+		<where>roleId=#{roleId}</where>
+	</select>
+	
+	<!-- 添加角色信息 -->
+	<insert id="addRole" parameterType="role" >
+		insert role(roleName,roleDescription) 
+		values (#{roleName},#{roleDescription})
+	</insert>
+	
+	<!-- 更新角色信息 -->
+	<!-- 使用if+trim实现更新操作 -->
+	<!-- suffixOverrides：对trim包含内容尾部的覆盖(忽略) -->
+	<!-- 等价于： update role set roleName=#{roleName},menuIds=#{menuIds},operationIds=#{operationIds}, 
+	roleDescription=#{roleDescription} where roleId=#{roleId}-->
+	<update id="updateRole" parameterType="role">
+    	update role set
+    	<trim suffixOverrides=",">
+			<if test="roleName!=null">roleName=#{roleName},</if>
+			<if test="menuIds!=null">menuIds=#{menuIds},</if>
+			<if test="operationIds!=null">operationIds=#{operationIds},</if>
+			<if test="roleDescription!=null">roleDescription=#{roleDescription},</if>
+		</trim>
+		<where>roleId=#{roleId}</where>
+    </update>
+	
+	<!-- 根据roleId删除单个角色信息 -->
+	<delete id="deleteRole" parameterType="Integer">
+		delete from role 
+		<where>roleId=#{roleId}</where>
+	</delete>
+	
+	<!-- 根据roleIds批量删除所有角色信息 -->
+	<delete id="deleteRoleByRoleIds" parameterType="Map">
+		delete from role where roleId in
+		 <foreach collection="roleIds" item='item' open="(" separator="," close=")">
+		 	#{item}
+		 </foreach>
+	</delete>
+	
+	<!-- 根据角色名查询角色信息 -->
+	<select id="existRoleWithRoleName" parameterType="String" resultType="role">
+		select roleId,roleName,menuIds,roleDescription from role where roleName=#{roleName} 
+	</select>
+</mapper>

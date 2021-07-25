@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="menu">
+	
+	<!-- 查询菜单信息 -->
+	<select id="findMenu" parameterType="menu" resultType="menu">
+		select menuId,menuName,menuUrl,parentId,menuDescription,state,iconCls,seq from menu where 1 = 1
+		<!-- 模糊查询 -->
+		<if test="menuName != null and '' != menuName">  
+            <![CDATA[  
+              AND menuName like '%' #{menuName} '%'  
+            ]]>  
+        </if>
+        <!-- 根据父节的id查询同一层的菜单信息 -->
+        <if test="parentId != null and '' != parentId">  
+            <![CDATA[  
+              AND parentId = #{parentId} 
+            ]]>  
+        </if>
+        order by seq   <!-- 按序号升序排序 -->
+	</select>
+	
+	
+
+    <!-- 查询菜单信息总数 -->
+	<select id="countMenu" parameterType="menu" resultType="int">
+		select count(*) from menu  where 1 = 1
+		<!-- 使用if选择查询 -->
+		<if test="menuName != null and '' != menuName">  
+            <![CDATA[  
+              AND menuName like '%' #{menuName} '%'  
+            ]]>  
+        </if>
+        <!-- 根据父节点id查询子节点的总数 -->
+        <if test="parentId != null and '' != parentId">  
+            <![CDATA[  
+              AND parentId = #{parentId} 
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 根据parentId和menuIds查询该角色拥有的菜单信息 -->
+	<select id="menuTree" parameterType="Map" resultType="menu">
+		select menuId,menuName,menuUrl,parentId,menuDescription,state,iconCls,seq from menu
+		where parentId = #{parentId} and menuId in
+		 <foreach collection="menuIds" item='item' open="(" separator="," close=")">
+		 	#{item}
+		 </foreach>
+		 order by seq
+	</select>
+	
+	
+	<!-- 添加菜单信息 -->
+	<insert id="addMenu" parameterType="menu">
+		insert into menu(menuName,menuUrl,parentId,menuDescription,state,iconCls,seq) 
+			values(#{menuName},#{menuUrl},#{parentId},#{menuDescription},'open',#{iconCls},#{seq})
+	</insert>
+	
+	<!-- 根据menuId修改菜单信息 -->
+	<update id="updateMenu" parameterType="menu">
+		update menu set
+    	<trim suffixOverrides=",">
+			<if test="menuName!=null">menuName=#{menuName},</if>
+			<if test="menuUrl!=null">menuUrl=#{menuUrl},</if>
+			<if test="menuDescription!=null">menuDescription=#{menuDescription},</if>
+			<if test="state!=null">state=#{state},</if>
+			<if test="iconCls!=null">iconCls=#{iconCls},</if>
+			<if test="seq!=null">seq=#{seq},</if>
+		</trim>
+		<where>menuId=#{menuId}</where>
+	</update>
+	
+	<!-- 删除菜单信息 -->
+	<delete id="deleteMenu" parameterType="Integer">
+		delete from menu where menuId = #{menuId}
+	</delete>
+	
+	<!-- 根据菜单名查询菜单是否存在 -->
+	<select id="existMenuWithMenuName" parameterType="String" resultType="menu">
+		select menuId,menuName,menuUrl,parentId,menuDescription,state,iconCls,seq from menu 
+		where menuName=#{menuName}
+	</select>
+</mapper>

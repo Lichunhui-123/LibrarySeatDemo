@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="operation">
+	
+	<!-- 查询按钮信息 -->
+	<select id="findOperation" parameterType="operation" resultType="operation">
+		select operationId,operationName,menuId,menuName from operation where 1 = 1
+		<!-- 查询该菜单下的按钮列表 -->
+		<if test="menuId != null and '' != menuId" >           
+          AND   menuId = #{menuId}
+        </if>
+        <!-- 分页查询 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+
+    <!-- 查询按钮总数 -->
+	<select id="countOperation" parameterType="operation" resultType="int">
+		select count(*) from operation where 1 = 1
+		<!-- 查询该菜单下的按钮总数 -->
+		<if test="menuId != null and '' != menuId" >           
+          AND   menuId = #{menuId}
+        </if>
+	</select>
+	
+	<!-- 添加按钮 -->
+	<insert id="addOperation" parameterType="operation" >
+		insert operation(operationName,menuId,menuName) 
+		values (#{operationName},#{menuId},#{menuName})
+	</insert>
+	
+	<!-- 修改按钮 -->
+	<update id="updateOperation" parameterType="operation">
+    	update operation set
+    	<trim suffixOverrides=",">
+			<if test="operationName!=null">operationName=#{operationName},</if>
+		</trim>
+		<where>operationId=#{operationId}</where>
+    </update>
+	
+	<!-- 删除按钮 -->
+	<delete id="deleteOperation" parameterType="Integer">
+		delete from operation 
+		<where>operationId=#{operationId}</where>
+	</delete>
+	
+	
+</mapper>

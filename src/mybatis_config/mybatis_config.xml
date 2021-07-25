@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" /><!-- 开启二级缓存 默认值为true -->
+		<setting name="lazyLoadingEnabled" value="true" /><!-- 延迟加载 -->
+		<setting name="multipleResultSetsEnabled" value="true" /><!-- 允许一条SQL返回多个结果集 -->
+		<setting name="useColumnLabel" value="true" /><!-- 使用列索引号代替列名称 -->
+		<setting name="useGeneratedKeys" value="true" /><!-- 允许JDBC 生成主键 -->
+		<setting name="defaultExecutorType" value="SIMPLE" /><!-- 普通的执行器 -->
+		<setting name="defaultStatementTimeout" value="25000" /><!-- SQL执行超时时间 -->
+	</settings>
+	
+	<typeAliases>
+		<!-- 系统管理 -->
+		<typeAlias type="lichunhui.entity.User" alias="user" />
+		<typeAlias type="lichunhui.entity.Menu" alias="menu" />
+		<typeAlias type="lichunhui.entity.Role" alias="role" />
+		<typeAlias type="lichunhui.entity.Operation" alias="operation" />
+		
+		
+		
+		<!-- 信息管理 -->
+		<typeAlias type="lichunhui.entity.Teacher" alias="teacher" />
+		<typeAlias type="lichunhui.entity.Clazz"   alias="clazz" />
+		<typeAlias type="lichunhui.entity.Student"   alias="student" />
+		
+		
+		<!-- 阅览室管理 -->
+		<typeAlias type="lichunhui.entity.Type" alias="type" />
+		<typeAlias type="lichunhui.entity.Room" alias="room" />
+		
+		<!-- 座位管理 -->
+		<typeAlias type="lichunhui.entity.Seat" alias="seat" />
+		<typeAlias type="lichunhui.entity.Choice" alias="choice" />
+		
+		<!-- 信用积分积分 -->
+		<typeAlias type="lichunhui.entity.Score" alias="score"/>
+		<typeAlias type="lichunhui.entity.Illegal" alias="illegal"/>
+		
+		
+
+		
+		
+	</typeAliases>
+
+		
+	<mappers>
+		<!-- 系统管理 -->
+		<mapper resource="./mybatis_config/User.xml" />
+		<mapper resource="./mybatis_config/Menu.xml" />
+		<mapper resource="./mybatis_config/Role.xml" />
+		<mapper resource="./mybatis_config/Operation.xml" />
+		
+		
+		<!-- 信息管理 -->
+		<mapper resource="./mybatis_config/Teacher.xml" />
+		<mapper resource="./mybatis_config/Clazz.xml" />
+		<mapper resource="./mybatis_config/Student.xml" />
+		
+		
+		<!-- 阅览室管理 -->
+		<mapper resource="./mybatis_config/Type.xml" />
+		<mapper resource="./mybatis_config/Room.xml" />
+		
+		<!-- 座位管理 -->
+		<mapper resource="./mybatis_config/Seat.xml" />
+		<mapper resource="./mybatis_config/Choice.xml" />
+		
+		<!-- 信用积分积分 -->
+		<mapper resource="./mybatis_config/Score.xml"/>
+		<mapper resource="./mybatis_config/Illegal.xml"/>
+		
+		
+		
+		
+		
+		
+	</mappers>
+	 
+</configuration>

@@ -1,0 +1,188 @@
+body
+{
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	background: #214D90 url(../images/bg1.jpg) repeat-x;
+	color: #999999;
+	font-family: Tahoma,Verdana;
+}
+ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.Main
+{
+	width: 940px;
+	margin: 0 auto;
+}
+
+.top
+{
+	height: 75px;
+	
+}
+
+.top2
+{
+	height: 94px;
+	
+}
+
+.topA
+{
+	width: 155px;
+	height: 140px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+
+.topB
+{
+	width: 282px;
+	height: 140px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+
+.topC
+{
+	width: 27px;
+	height: 140px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+
+.topD
+{
+	width: 318px;
+	height: 234px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+.topE
+{
+	width: 311px;
+	height: 234px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+
+
+.middle_A
+{
+	width: 311px;
+	height: 234px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+.middle_B
+{
+	width: 309px;
+	height: 94px;
+	float: left;
+	overflow: hidden;
+	
+
+}
+
+.middle_C
+{
+	
+	width: 318px;
+	height: 94px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+.middle_D
+{
+	width: 311px;
+	height: 234px;
+	float: left;
+	overflow: hidden;
+	
+}
+
+.bottom_A
+{
+	height: 72px;
+	clear: both;
+	overflow: hidden;
+	
+}
+
+.bottom_B
+{
+	height: 70px;
+	overflow: hidden;
+	 text-align:center;
+	
+}
+
+.login
+{
+	
+}
+
+.login li
+{
+	line-height: 35px;
+	height:35px;
+	overflow:hidden;
+}
+
+.left
+{ line-height: 35px;
+	vertical-align: middle;
+	width: 50px;
+	height:34px;
+	text-align: right;
+	display: -moz-inline-box;
+	display: inline-block;
+	padding-bottom:3px;
+}
+
+.txt
+{
+	width: 215px;
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+	border: 0px;
+	padding-left: 3px;
+	color: #999999;
+	
+}
+
+.txtCode
+{
+	line-height: 30px;
+	width: 93px;
+	height: 30px;
+	overflow: hidden;
+	border: 0px;
+	padding-left: 3px;
+		color: #999999;
+	
+}
+
+.btn
+{
+	margin-left:53px;
+}

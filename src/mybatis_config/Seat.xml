@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.SeatDao">
+
+    <!-- 左连接查询座位信息 -->
+	<select id="findSeat" resultType="seat">
+		select 
+			a.id as id,
+			a.roomid as roomid,
+			b.name as roomname,
+			a.studentno as studentno,
+			a.col as col,
+			a.row as row,
+			a.time as time,
+			a.date as date,
+			a.keyword as keyword
+		from seat a join room b on a.roomid = b.id 
+		where 1 = 1 
+		<!-- 使用if：实现条件查询 -->
+		<if test="studentno!=null and ''!=studentno">  
+            <![CDATA[  
+             and a.studentno = #{studentno}  
+            ]]>  
+        </if>
+        <if test="time!=null and ''!=time">  
+            <![CDATA[  
+             and a.time = #{time}  
+            ]]>  
+        </if>
+         <if test="date!=null and ''!=date">  
+            <![CDATA[  
+             and a.date = #{date}  
+            ]]>  
+        </if>
+        <if test="roomid!=null and ''!=roomid">  
+            <![CDATA[  
+             and a.roomid = #{roomid}  
+            ]]>  
+        </if>
+        <!-- 分页查询 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>	
+	</select>
+	
+	
+	<!-- 查询座位信息总数 -->
+	<select id="countSeat">
+		select 
+			count(*)
+		from seat a join room b on a.roomid = b.id
+			left join student c on a.studentno = c.no
+		where 1 = 1 
+		<if test="studentno!=null and ''!=studentno">  
+            <![CDATA[  
+             and a.studentno = #{studentno}  
+            ]]>  
+        </if>
+        <if test="time!=null and ''!=time">  
+            <![CDATA[  
+             and a.time = #{time}  
+            ]]>  
+        </if>
+        <if test="date!=null and ''!=date">  
+            <![CDATA[  
+             and a.date = #{date}  
+            ]]>  
+        </if>
+        <if test="roomid!=null and ''!=roomid">  
+            <![CDATA[  
+             and a.roomid = #{roomid}  
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 添加座位信息 -->
+	<insert id="insertSeat">
+		insert into seat(roomid,row,col,studentno,time,date,keyword) values (#{roomid},#{row},#{col},1,#{time},#{date},#{keyword})
+	</insert>
+	
+	<!-- 占座 -->
+	<update id="occupySeat">
+		update seat set studentno = #{studentno} where keyword = #{keyword}
+	</update>
+
+    <!-- 修改座位表中studentno为1 -->
+	<update id="cancelSeat">
+		update seat set studentno = '1' where keyword = #{keyword}
+	</update>
+
+    <!-- 删除座位信息 -->
+	<delete id="deleteSeat" parameterType="String">
+		delete from seat <where>LEFT(RIGHT(time,3),2) = #{time}</where>
+	</delete>
+    <!-- 查询余座总数-->
+	<select id="findBlock" parameterType="seat" resultType="int">
+		select count(*) from seat where roomid = #{roomid} and time = #{time} and date = #{date} and studentno = '1'
+	</select>
+	
+	<!-- 查询阅览室下存不存在座位 -->
+	<select id="existSeatWithRoomId" parameterType="Integer" resultType="seat">
+		select 
+			a.id as id,
+			a.roomid as roomid,
+			b.name as roomname,
+			a.studentno as studentno,
+			a.col as col,
+			a.row as row,
+			a.time as time,
+			a.date as date,
+			a.keyword as keyword
+		from seat a join room b on a.roomid = b.id 
+		where  b.id = #{roomid} limit 0,1
+	</select>
+</mapper>

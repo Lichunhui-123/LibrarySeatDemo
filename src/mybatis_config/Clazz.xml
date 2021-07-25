@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.ClazzDao">
+	
+	<!-- 左连接查询班级信息 -->
+	<!-- LEFT JOIN 关键字会从左道表 a 那里返回所有的专行 ，而右表只列出ON后条件与左表满足的部分-->
+	<select id="findClazz" parameterType="clazz" resultType="clazz">
+		select a.id,a.name as name,xueyuan,zhuanye,teacherno,a.teacherno,b.name as teachername  
+		from clazz a left join teacher b <!-- 左连接 -->
+		on a.teacherno = b.no <!-- 连接两表的条件 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+    <!-- 查询班级信息总数 -->
+	<select id="countClazz" parameterType="clazz" resultType="int">
+		select count(*)  
+		from clazz a left join teacher b on a.teacherno = b.no 
+	</select>
+	<!-- 添加班级信息 -->
+	<insert id="addClazz" parameterType="clazz" >
+		insert clazz(name,xueyuan,zhuanye,teacherno) 
+		values (#{name},#{xueyuan},#{zhuanye},#{teacherno})
+	</insert>
+	<!-- 修改班级信息 -->
+	<!-- 使用if+trim实现更新操作 -->
+	<!-- suffixOverrides：对trim包含内容尾部的覆盖(忽略) -->
+	<update id="updateClazz" parameterType="clazz">
+    	update clazz set
+    	<trim suffixOverrides=",">
+			<if test="name!=null">name=#{name},</if>
+			<if test="xueyuan!=null">xueyuan=#{xueyuan},</if>
+			<if test="zhuanye!=null">zhuanye=#{zhuanye},</if>
+			<if test="teacherno!=null">teacherno=#{teacherno},</if>
+		</trim>
+		<where>id=#{id}</where>
+    </update>
+	
+	<!-- 根据id删除班级信息 -->
+	<delete id="deleteClazz" parameterType="Integer">
+		delete from clazz <where>id=#{id}</where>
+	</delete>
+	
+    <!-- 根据班级名查询班级是否存在 -->
+	<select id="existClazzWithName" parameterType="String" resultType="clazz">
+		select a.id,a.name as name,xueyuan,zhuanye,teacherno,a.teacherno,b.name as teachername  
+		from clazz a left join teacher b <!-- 左连接 -->
+		on a.teacherno = b.no
+		where a.name=#{name}
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+	<tlibversion>1.0</tlibversion>    <!-- 此标签库的版本 -->
+	<jspversion>1.1</jspversion>      <!-- 此标签库依赖的jsp版本 -->
+	<shortname>privilege</shortname>  <!-- 标签库别名 ，当在JSP中使用标签时，此标签库首选或者建议的前缀-->
+	<uri>http://www.newInstance.com/taglibs/site-utils</uri> <!-- 指定使用该标签库中标签的URI -->
+
+	<tag>
+	    <!-- 指定的标签名称 -->
+		<name>operation</name>
+		<!-- Java标签处理器类的名称,注意这是处理器类的全限定名称 -->
+		<tagclass>lichunhui.tag.PrivilegeTag</tagclass>
+		<!-- 此标签的主体部分的内容 -->
+		<bodycontent>JSP</bodycontent> <!--这里如果设为empty,则无body-->
+		<attribute>
+			<name>operationId</name>
+			<required>true</required> <!-- jsp页面必须为该属性提供一个值 -->
+			<rtexprvalue>true</rtexprvalue> <!-- 能接受请求时表达式的值 -->
+		</attribute>
+		<attribute>
+		    <!-- 在jsp标签中使用的属性名称 -->
+			<name>name</name>
+		</attribute>
+		<attribute>
+			<name>clazz</name>
+		</attribute>
+		<attribute>
+			<name>iconCls</name>
+		</attribute>
+		<attribute>
+			<name>onClick</name>
+		</attribute>
+	</tag>
+</taglib>

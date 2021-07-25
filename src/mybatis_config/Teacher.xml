@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.TeacherDao">
+	
+	<!-- 查询教师信息 -->
+	<!-- CDATA:处理的是小于/小于等于符号（”<“/”<=“）与XML的尖括号”<“之间的冲突 -->
+	<select id="findTeacher" parameterType="teacher" resultType="teacher">
+		select id,name,no,sex,phone,mail,position  
+		from teacher where 1 = 1
+		<!-- 使用if进行选择查询 -->
+		<if test="name != null and '' != name">  
+            <![CDATA[  
+              AND name like '%' #{name} '%'  
+            ]]>  
+        </if>
+        <if test="no!=null and ''!=no">  
+            <![CDATA[  
+              AND no like '%' #{no} '%'  
+            ]]>  
+        </if>
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+    <!-- 查询教师信息的总数 -->
+	<select id="countTeacher" parameterType="teacher" resultType="int">
+		select count(*)  
+		from teacher where 1 = 1
+		<if test="name != null and '' != name">  
+            <![CDATA[  
+              AND name like '%' #{name} '%'  
+            ]]>  
+        </if>
+        <if test="no!=null and ''!=no">  
+            <![CDATA[  
+          	  AND no like '%' #{no} '%'
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 根据id查询当个教师信息 -->
+	<select id="findOneTeacher" parameterType="Integer" resultType="teacher">
+		select id,name,no,sex,phone,mail,position from teacher
+		<where>id=#{id}</where>
+	</select>
+	
+	<!-- 添加教师信息 -->
+	<insert id="addTeacher" parameterType="teacher" >
+		insert teacher(name,no,sex,mail,position,phone) 
+		values (#{name},#{no},#{sex},#{mail},#{position},#{phone})
+	</insert>
+	
+	<!-- 修改教师信息 -->
+	<!-- 使用if+trim实现更新操作 -->
+	<!-- suffixOverrides：对trim包含内容尾部的覆盖(忽略) -->
+	<update id="updateTeacher" parameterType="teacher">
+    	update teacher set
+    	<trim suffixOverrides=",">
+			<if test="name!=null">name=#{name},</if>
+			<if test="no!=null">no=#{no},</if>
+			<if test="phone!=null">phone=#{phone},</if>
+			<if test="sex!=null">sex=#{sex},</if>
+			<if test="mail!=null">mail=#{mail},</if>
+			<if test="position!=null">position=#{position},</if>
+		</trim>
+		<where>id=#{id}</where>
+    </update>
+	
+	<!-- 根据id删除教师信息 -->
+	<delete id="deleteTeacher" parameterType="Integer">
+		delete from teacher <where>id=#{id}</where>
+	</delete>
+	<!-- 根据工号查询用户是否存在 -->
+	<select id="existTeacherWithNo" parameterType="String" resultType="teacher">
+		select id,name,no,sex,phone,mail,position from teacher 
+		where no=#{no}
+	</select>
+
+	
+	
+	
+</mapper>

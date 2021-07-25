@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.RoomDao">
+	
+	<!-- 左连接查询阅览室信息 -->
+	<select id="findRoom" parameterType="room" resultType="room">
+		select 
+			a.id as id,
+			a.name as name,
+			a.typeid as typeid,
+			a.row as row,
+			a.col as col,
+			b.name as typename,
+			a.total as total
+		from room a left join type b  <!-- 左连接 -->
+		 on a.typeid = b.id        <!-- 连接两个表的条件 -->
+		 <!-- 选择查询 -->
+        <if test="typeid!=null and ''!=typeid">  
+            <![CDATA[  
+             where a.typeid = #{typeid}  
+            ]]>  
+        </if>
+        <!-- 分页查询 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+        <!-- 根据用户名查询用户是否存在 -->
+	<select id="existRoomWithName" parameterType="String" resultType="room">
+		select 
+			a.id as id,
+			a.name as name,
+			a.typeid as typeid,
+			a.row as row,
+			a.col as col,
+			b.name as typename,
+			a.total as total
+		from room a left join type b  <!-- 左连接 -->
+		 on a.typeid = b.id        <!-- 连接两个表的条件 -->
+		where a.name=#{name}
+	</select>
+    <!-- 查询阅览室总数 -->
+	<select id="countRoom" parameterType="room" resultType="int">
+		select 
+			count(*)
+		from room a left join type b on a.typeid = b.id
+        <if test="typeid!=null and ''!=typeid">  
+            <![CDATA[  
+             where a.typeid = #{typeid}  
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 添加阅览室信息 -->
+	<insert id="addRoom" parameterType="room" >
+		insert room(typeid,name,row,col,total) 
+		values (#{typeid},#{name},#{row},#{col},#{total})
+	</insert>
+	
+	<!-- 删除阅览室信息 -->
+	<update id="updateRoom" parameterType="room">
+    	update room set
+    	<trim suffixOverrides=",">
+			<if test="name!=null">name=#{name},</if>
+			<if test="typeid!=null">typeid=#{typeid},</if>
+			<if test="row!=null">row=#{row},</if>
+			<if test="col!=null">col=#{col},</if>
+			<if test="total!=null">total=#{total},</if>
+		</trim>
+		<where>id=#{id}</where>
+    </update>
+	
+	<!-- 根据id删除阅览室信息 -->
+	<delete id="deleteRoom" parameterType="Integer">
+		delete from room <where>id=#{id}</where>
+	</delete>
+	
+    <!-- 通过roomid查找进入该类型教室所需积分 -->
+	<select id="findScoreByRoomid" resultType="int">
+		select 
+			b.score as score
+		from room a left join type b on a.typeid = b.id
+        where a.id = #{roomid}
+	</select>
+	
+	<!-- 查询类型下存不存在阅览室 -->
+	<select id="existRoomWithTypeId" parameterType="Integer" resultType="room">
+		select 
+			a.id as id,
+			a.name as name,
+			a.typeid as typeid,
+			a.row as row,
+			a.col as col,
+			b.name as typename,
+			a.total as total
+		from room a left join type b  <!-- 左连接 -->
+		 on a.typeid = b.id 
+		 where b.id = #{typeid} limit 0,1
+	</select>
+	
+</mapper>

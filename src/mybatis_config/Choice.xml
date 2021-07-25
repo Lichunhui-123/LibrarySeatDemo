@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lichunhui.dao.ChoiceDao">
+	
+	<!-- 查询所有座位选择信息 -->
+	<select id="findChoice" parameterType="choice" resultType="choice">
+		select id,studentno,seatkeyword,time,status from choice where 1 =1 
+		<!-- 条件查询 -->
+		<if test="studentno != null and '' != studentno">  
+            <![CDATA[  
+              and studentno = #{studentno}  
+            ]]>  
+        </if>
+        <if test="status != null and '' != status">  
+            <![CDATA[  
+              and status != #{status}  
+            ]]>  
+        </if>
+        <if test="start != null and '' != start">  
+            <![CDATA[  
+              and time >= #{start}  
+            ]]>  
+        </if>
+        <if test="end != null and '' != end">  
+            <![CDATA[  
+              and time <= #{end}  
+            ]]>  
+        </if>
+        order by time desc
+        <!-- 分页查询 -->
+		<if test="page != null and rows != null" >           
+              limit #{page}, #{rows} 
+        </if>
+	</select>
+
+
+    <select id="findChoiceByStatus" parameterType="choice" resultType="choice">
+		select id,studentno,seatkeyword,time,status from choice where 1 =1 
+		<if test="status != null and '' != status">  
+            <![CDATA[  
+              and status != #{status}  
+            ]]>  
+             <![CDATA[  
+              and RIGHT(LEFT(seatkeyword,13),2) = #{seatkeyword}  
+            ]]>
+        </if>
+		</select>
+    <!-- 根据时间查询过去时间段的选座记录 -->
+    <select id="findChoiceByTime" parameterType="choice" resultType="choice">
+     <![CDATA[ 
+		select id,studentno,seatkeyword,time,status from choice where LEFT(RIGHT(seatkeyword,9),2) = #{seatkeyword} 
+		]]>
+	</select>
+	
+    <!-- 查询座位选择信息总数 -->
+	<select id="countChoice" parameterType="choice" resultType="int">
+		select count(*) from choice where 1 =1 
+		<if test="studentno != null and '' != studentno">  
+            <![CDATA[  
+              and studentno = #{studentno}  
+            ]]>  
+        </if>
+        <if test="status != null and '' != status">  
+            <![CDATA[  
+              and status = #{status}  
+            ]]>  
+        </if>
+        <if test="start != null and '' != start">  
+            <![CDATA[  
+              and time >= #{start}  
+            ]]>  
+        </if>
+        <if test="end != null and '' != end">  
+            <![CDATA[  
+              and time <= #{end}  
+            ]]>  
+        </if>
+	</select>
+	
+	<!-- 添加座位选择信息 -->
+	<insert id="addChoice" parameterType="choice" >
+		insert choice(studentno,time,seatkeyword) 
+		values (#{studentno},#{time},#{seatkeyword})
+	</insert>
+	
+	<!-- 修改座位选择信息 -->
+	<update id="modifyChoice" parameterType="choice">
+		  <![CDATA[  
+            	update choice set status = '1' where time <= #{time}
+           ]]> 
+    </update>
+	
+	<!-- 删除选择座位信息 -->
+	<delete id="deleteChoice" parameterType="Integer">
+		delete from choice <where>id=#{id}</where>
+	</delete>
+	
+	<!-- 删除选择座位信息 -->
+	<delete id="deleteChoiceByTime" parameterType="String">
+		 <![CDATA[ 
+		 delete from choice where LEFT(RIGHT(seatkeyword,9),2) = #{seatkeyword} 
+           ]]>
+	</delete>
+    <!-- 查询该学生选择的座位信息 -->
+    <!-- LEFT(seatkeyword,20):取seatKeyword左边的20个字符：即日期-时间段-roomid -->
+	<select id="findOneChoice" resultType="choice">
+		SELECT id,studentno,seatkeyword,time,status FROM choice WHERE LEFT(seatkeyword,20) = #{seatkeyword} AND studentno = #{studentno} and STATUS = '0' 
+	</select>
+	
+	<!-- 修改座位选择信息 -->
+	<update id="modifyOneChoice" parameterType="choice">
+		  <![CDATA[  
+            	update choice set status = #{status} where LEFT(seatkeyword,20) = #{seatkeyword} AND studentno = #{studentno}
+           ]]> 
+    </update>
+
+    <!-- 修改座位选择信息 -->
+	<update id="modifyOneChoiceByStatus" parameterType="choice">
+		  <![CDATA[  
+            	update choice set status = #{status} where RIGHT(LEFT(seatkeyword,13),2) = #{seatkeyword}  AND studentno = #{studentno}
+           ]]> 
+    </update>
+	<!-- 删除选择座位信息 -->
+	<delete id="cancelChoice" parameterType="choice"> 
+		DELETE FROM choice WHERE LEFT(seatkeyword,20) = #{seatkeyword} AND studentno = #{studentno} 
+	</delete>
+	
+	
+	
+	
+	
+	
+</mapper>
